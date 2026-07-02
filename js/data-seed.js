@@ -1,6 +1,8 @@
+// js/data-seed.js
+
 const initialCategories = [
     { id: "cat-1", name: "Conciertos", description: "Festivales y eventos musicales en vivo" },
-    { id: "cat-2", name: "Deportes", description: "Torneos, partidos y encuentros atléticos" },
+    { id: "cat-2", name: "Deportes", description: "Torneos, partidos y encuentros athletic" },
     { id: "cat-3", name: "Sorteos", description: "Rifas y actividades pro-fondos" }
 ];
 
@@ -26,5 +28,16 @@ const initialEvents = [
         city: "Bucaramanga",
         image: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=500",
         description: "Apoya a tu equipo local en las canchas profesionales de la región."
+    },
+    {
+        id: "EV-003",
+        name: "Rifa Pro-Fondos Tecnológicos",
+        category: "cat-3",
+        price: 10000,
+        date: "2026-11-05",
+        time: "17:00",
+        city: "Bogotá",
+        image: "https://images.unsplash.com/photo-1518173946687-a4c8a3b1f98e?q=80&w=500",
+        description: "Sorteo de una Laptop Gamer de última generación con kit completo de accesorios."
     }
 ];

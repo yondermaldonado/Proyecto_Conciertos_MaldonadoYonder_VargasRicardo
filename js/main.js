@@ -1,123 +1,139 @@
+// js/main.js
+
 let carrito = [];
 
 document.addEventListener('DOMContentLoaded', () => {
-    renderCategoriesSelect();
-    renderEventos();
+    cargarCategoriasFiltro();
+    renderizarVitrinaEventos();
 
-    // Filtros dinámicos
-    document.getElementById('search-input').addEventListener('input', renderEventos);
-    document.getElementById('filter-ciudad').addEventListener('change', renderEventos);
-    document.getElementById('filter-categoria').addEventListener('change', renderEventos);
+    // Captura de eventos para filtros en tiempo real
+    document.getElementById('search-input')?.addEventListener('input', renderizarVitrinaEventos);
+    document.getElementById('filter-ciudad')?.addEventListener('change', renderizarVitrinaEventos);
+    document.getElementById('filter-categoria')?.addEventListener('change', renderizarVitrinaEventos);
 
-    // Modales de interacción
-    document.getElementById('ver-carrito').addEventListener('click', () => toggleModal('modal-carrito', true));
-    document.getElementById('close-carrito').addEventListener('click', () => toggleModal('modal-carrito', false));
-    document.getElementById('close-detalle').addEventListener('click', () => toggleModal('modal-detalle', false));
+    // Controladores de los modales de la interfaz pública
+    document.getElementById('ver-carrito')?.addEventListener('click', () => abrirCerrarModal('modal-carrito', true));
+    document.getElementById('close-carrito')?.addEventListener('click', () => abrirCerrarModal('modal-carrito', false));
+    document.getElementById('close-detalle')?.addEventListener('click', () => abrirCerrarModal('modal-detalle', false));
 
-    // Formulario de compra final
-    document.getElementById('form-compra').addEventListener('submit', procesarCompra);
+    // Procesador del formulario de facturación
+    document.getElementById('form-compra')?.addEventListener('submit', procesarCompraCliente);
 });
 
-function renderCategoriesSelect() {
-    const cats = StorageManager.get('categories');
+function cargarCategoriasFiltro() {
     const select = document.getElementById('filter-categoria');
-    cats.forEach(c => {
-        select.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+    if (!select) return;
+    
+    const categorias = StorageManager.get('categories');
+    categorias.forEach(cat => {
+        select.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
     });
 }
 
-function renderEventos() {
+function renderizarVitrinaEventos() {
+    const contenedor = document.getElementById('eventos-container');
+    if (!contenedor) return;
+
     const eventos = StorageManager.get('events');
-    const cats = StorageManager.get('categories');
-    const search = document.getElementById('search-input').value.toLowerCase();
-    const city = document.getElementById('filter-ciudad').value;
-    const cat = document.getElementById('filter-categoria').value;
+    const categorias = StorageManager.get('categories');
 
-    const container = document.getElementById('eventos-container');
-    container.innerHTML = '';
+    const textoBuscado = document.getElementById('search-input').value.toLowerCase();
+    const ciudadSeleccionada = document.getElementById('filter-ciudad').value;
+    const categoriaSeleccionada = document.getElementById('filter-categoria').value;
 
-    const filtrados = eventos.filter(ev => {
-        const matchesSearch = ev.name.toLowerCase().includes(search);
-        const matchesCity = city === "" || ev.city === city;
-        const matchesCat = cat === "" || ev.category === cat;
-        return matchesSearch && matchesCity && matchesCat;
+    contenedor.innerHTML = '';
+
+    const eventosFiltrados = eventos.filter(ev => {
+        const coincideNombre = ev.name.toLowerCase().includes(textoBuscado);
+        const coincideCiudad = ciudadSeleccionada === "" || ev.city === ciudadSeleccionada;
+        const coincideCategoria = categoriaSeleccionada === "" || ev.category === categoriaSeleccionada;
+        return coincideNombre && coincideCiudad && coincideCategoria;
     });
 
-    filtrados.forEach(ev => {
-        const catObj = cats.find(c => c.id === ev.category);
-        const el = document.createElement('event-card');
-        el.setAttribute('event-id', ev.id);
-        el.setAttribute('name', ev.name);
-        el.setAttribute('price', ev.price);
-        el.setAttribute('date', ev.date);
-        el.setAttribute('city', ev.city);
-        el.setAttribute('image', ev.image);
-        el.setAttribute('category-name', catObj ? catObj.name : 'Evento');
-        container.appendChild(el);
+    eventosFiltrados.forEach(ev => {
+        const objetoCategoria = categorias.find(c => c.id === ev.category);
+        const card = document.createElement('event-card');
+        
+        card.setAttribute('event-id', ev.id);
+        card.setAttribute('name', ev.name);
+        card.setAttribute('price', ev.price);
+        card.setAttribute('date', ev.date);
+        card.setAttribute('city', ev.city);
+        card.setAttribute('image', ev.image);
+        card.setAttribute('category-name', objetoCategoria ? objetoCategoria.name : 'Evento');
+        
+        contenedor.appendChild(card);
     });
 
-    asignarEventosTarjetas();
+    enlazarBotonesTarjetas();
 }
 
-function asignarEventosTarjetas() {
+function enlazarBotonesTarjetas() {
     document.querySelectorAll('.btn-comprar').forEach(btn => {
-        btn.onclick = (e) => {
-            const id = e.target.getAttribute('data-id');
-            agregarAlCarrito(id);
-        };
+        btn.onclick = (e) => añadirAlCarrito(e.target.getAttribute('data-id'));
     });
     document.querySelectorAll('.btn-ver').forEach(btn => {
-        btn.onclick = (e) => {
-            const id = e.target.getAttribute('data-id');
-            verDetalle(id);
-        };
+        btn.onclick = (e) => verFichaDetalle(e.target.getAttribute('data-id'));
     });
 }
 
-function agregarAlCarrito(id) {
-    const target = StorageManager.get('events').find(e => e.id === id);
-    carrito.push(target);
+function añadirAlCarrito(id) {
+    const eventoEncontrado = StorageManager.get('events').find(e => e.id === id);
+    carrito.push(eventoEncontrado);
+    
     document.getElementById('cart-count').innerText = carrito.length;
-    StorageManager.showAlert(`"${target.name}" agregado al carrito.`);
-    actualizarCarritoModal();
+    StorageManager.showAlert(`"${eventoEncontrado.name}" añadido al carrito de compras.`);
+    actualizarVistaModalCarrito();
 }
 
-function actualizarCarritoModal() {
-    const itemsCont = document.getElementById('carrito-items');
-    itemsCont.innerHTML = '';
-    let total = 0;
-    carrito.forEach((item, index) => {
-        total += item.price;
-        itemsCont.innerHTML += `
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <span>${item.name} (${item.city})</span>
-                <strong>$${item.price.toLocaleString()}</strong>
+function actualizarVistaModalCarrito() {
+    const contenedorItems = document.getElementById('carrito-items');
+    if (!contenedorItems) return;
+    
+    contenedorItems.innerHTML = '';
+    let totalAcumulado = 0;
+
+    carrito.forEach(item => {
+        totalAcumulado += item.price;
+        contenedorItems.innerHTML += `
+            <div style="display:flex; justify-content:between; margin-bottom:8px; border-bottom:1px dashed #eee; padding-bottom:4px;">
+                <span>• ${item.name} (${item.city})</span>
+                <strong style="margin-left:auto;">$${item.price.toLocaleString()}</strong>
             </div>
         `;
     });
-    document.getElementById('carrito-total').innerText = `$${total.toLocaleString()} COP`;
+
+    document.getElementById('carrito-total').innerText = `$${totalAcumulado.toLocaleString()} COP`;
 }
 
-function verDetalle(id) {
+function verFichaDetalle(id) {
     const ev = StorageManager.get('events').find(e => e.id === id);
-    const detailCont = document.getElementById('detalle-content');
-    detailCont.innerHTML = `
-        <img src="${ev.image}" style="width:100%; max-height:300px; object-fit:cover; border-radius:10px;">
-        <h2 style="margin:15px 0;">${ev.name}</h2>
-        <p>${ev.description}</p>
-        <p style="margin:10px 0;"><strong>Ubicación:</strong> ${ev.city} | <strong>Fecha:</strong> ${ev.date} - ${ev.time}</p>
-        <h3 style="color:var(--primary-color)">Precio: $${ev.price.toLocaleString()} COP</h3>
+    const contenido = document.getElementById('detalle-content');
+    if (!contenido) return;
+
+    contenido.innerHTML = `
+        <img src="${ev.image}" style="width:100%; max-height:280px; object-fit:cover; border-radius:8px;">
+        <h2 style="margin:12px 0; color:var(--secondary-color);">${ev.name}</h2>
+        <p style="color:#555; line-height:1.5; margin-bottom:12px;">${ev.description}</p>
+        <p><strong>📍 Ubicación:</strong> ${ev.city}</p>
+        <p><strong>📅 Horario:</strong> ${ev.date} a las ${ev.time} HS</p>
+        <h3 style="color:var(--primary-color); margin-top:12px;">Valor de Entrada: $${ev.price.toLocaleString()} COP</h3>
     `;
-    toggleModal('modal-detalle', true);
+    abrirCerrarModal('modal-detalle', true);
 }
 
-function procesarCompra(e) {
+function procesarCompraCliente(e) {
     e.preventDefault();
-    if (carrito.length === 0) return StorageManager.showAlert('El carrito está vacío', 'error');
+    if (carrito.length === 0) {
+        StorageManager.showAlert('El carrito está vacío', 'error');
+        return;
+    }
 
-    const total = carrito.reduce((sum, item) => sum + item.price, 0);
-    const nuevaVenta = {
-        fecha: new Date().toISOString().split('T')[0],
+    let totalPagar = 0;
+    carrito.forEach(item => totalPagar += item.price);
+
+    const registroVenta = {
+        fecha: new Date().toLocaleDateString('es-CO'),
         timestamp: Date.now(),
         ciudad: carrito[0].city,
         cliente: {
@@ -125,23 +141,28 @@ function procesarCompra(e) {
             nombre: document.getElementById('cli-nombre').value,
             direccion: document.getElementById('cli-direccion').value,
             telefono: document.getElementById('cli-telefono').value,
-            email: document.getElementById('cli-email').value,
+            email: document.getElementById('cli-email').value
         },
-        items: carrito,
-        total: total
+        total: totalPagar
     };
 
-    const ventas = StorageManager.get('sales');
-    ventas.push(nuevaVenta);
-    StorageManager.set('sales', ventas);
+    // Registrar la venta localmente en memoria
+    StorageManager.registrarNuevaVenta(registroVenta);
 
-    StorageManager.showAlert('¡Compra realizada con éxito! Boleta asignada correctamente.');
+    StorageManager.showAlert('¡Compra exitosa! Tu entrada ha sido asignada correctamente.');
+
+    // Sincronización en tiempo real por si el administrador está en la misma página
+    if (typeof actualizarTablaVentasAdmin === 'function') {
+        actualizarTablaVentasAdmin();
+    }
+
+    // Limpiar carrito e interfaz
     carrito = [];
     document.getElementById('cart-count').innerText = 0;
     document.getElementById('form-compra').reset();
-    toggleModal('modal-carrito', false);
+    abrirCerrarModal('modal-carrito', false);
 }
 
-function toggleModal(id, open) {
-    document.getElementById(id).classList.toggle('active', open);
+function abrirCerrarModal(id, visible) {
+    document.getElementById(id)?.classList.toggle('active', visible);
 }

@@ -1,0 +1,15 @@
+[
+  {
+    "fecha": "2/7/2026",
+    "timestamp": 1783021789131,
+    "ciudad": "Bogotá",
+    "cliente": {
+      "identificacion": "DSDAS",
+      "nombre": "aaaaaa",
+      "direccion": "aaaaa",
+      "telefono": "aaaaa",
+      "email": "ert@weqwe"
+    },
+    "total": 23424
+  }
+]
