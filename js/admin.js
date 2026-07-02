@@ -40,7 +40,9 @@ function inicializarMódulosDashboard() {
         };
     });
 
-    document.getElementById('btn-logout').onclick = () => location.reload();
+    document.getElementById('btn-logout').onclick = () => {
+        location.href = "index.html";
+    };
 }
 
 function configurarNavegacionTabs() {
@@ -119,14 +121,28 @@ function guardarCategoria(e) {
     StorageManager.showAlert('Categoría guardada con éxito.');
 }
 
-function eliminarCategoria(id) {
-    if (!confirm('¿Desea eliminar esta categoría?')) return;
-    let lista = StorageManager.get('categories').filter(c => c.id !== id);
-    StorageManager.set('categories', lista);
-    renderizarTablaCategorias();
-    cargarDesplegableCategorias();
-}
 
+function eliminarCategoria(id) {
+
+    mostrarConfirmacion(
+        "¿Desea eliminar esta categoría?",
+        () => {
+
+            let lista = StorageManager.get("categories")
+                .filter(c => c.id !== id);
+
+            StorageManager.set("categories", lista);
+
+            renderizarTablaCategorias();
+
+            cargarDesplegableCategorias();
+
+            StorageManager.showAlert("Categoría eliminada.");
+
+        }
+    );
+
+}
 /* ==========================================================================
    CRUD: EVENTOS 
    ========================================================================== */
@@ -217,10 +233,23 @@ function guardarEvento(e) {
 }
 
 function eliminarEvento(id) {
-    if (!confirm('¿Desea dar de baja este evento?')) return;
-    let lista = StorageManager.get('events').filter(e => e.id !== id);
-    StorageManager.set('events', lista);
-    renderizarTablaEventos();
+
+    mostrarConfirmacion(
+        "¿Desea dar de baja este evento?",
+        () => {
+
+            let lista = StorageManager.get("events")
+                .filter(e => e.id !== id);
+
+            StorageManager.set("events", lista);
+
+            renderizarTablaEventos();
+
+            StorageManager.showAlert("Evento eliminado.");
+
+        }
+    );
+
 }
 
 /* ==========================================================================
@@ -355,5 +384,26 @@ function verDetalleVenta(index) {
     document.getElementById("sale-detail-content").innerHTML = html;
 
     document.getElementById("modal-sale").classList.add("active");
+
+}
+function mostrarConfirmacion(mensaje, accionAceptar) {
+
+    document.getElementById("confirm-message").textContent = mensaje;
+
+    document.getElementById("modal-confirm").classList.add("active");
+
+    document.getElementById("confirm-cancel").onclick = () => {
+
+        document.getElementById("modal-confirm").classList.remove("active");
+
+    };
+
+    document.getElementById("confirm-ok").onclick = () => {
+
+        document.getElementById("modal-confirm").classList.remove("active");
+
+        accionAceptar();
+
+    };
 
 }

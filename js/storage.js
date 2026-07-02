@@ -85,11 +85,50 @@ const StorageManager = {
         this.init();
 
     },
+    showAlert(message, type = "success") {
 
-    showAlert(message, type = 'success') {
-
-        alert(`[${type.toUpperCase()}] ${message}`);
-
+        const toast = document.getElementById("toast");
+    
+        if(!toast){
+            return;
+        }
+    
+        toast.className = "toast";
+    
+        toast.classList.add(type);
+    
+        let icono = "";
+    
+        switch(type){
+    
+            case "success":
+                icono = "✔ ";
+                break;
+    
+            case "error":
+                icono = "✖ ";
+                break;
+    
+            case "info":
+                icono = "ℹ ";
+                break;
+    
+            default:
+                icono = "";
+        }
+    
+        toast.innerHTML = icono + message;
+    
+        toast.classList.add("show");
+    
+        clearTimeout(this.toastTimer);
+    
+        this.toastTimer = setTimeout(()=>{
+    
+            toast.classList.remove("show");
+    
+        },3000);
+    
     }
 
 };

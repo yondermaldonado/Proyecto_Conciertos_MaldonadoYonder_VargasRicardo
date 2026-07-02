@@ -20,6 +20,7 @@
                 <div class="form-group"><label>Contraseña</label><input type="password" id="log-pass" required
                         value="123456"></div>
                 <button type="submit" class="btn btn-primary" style="width:100%;">Ingresar</button>
+                <button type="button" class="btn btn-secondary" onclick="location.href='index.html'" style="width:100%; margin-top:10px;">Volver</button>
             </form>
         </div>
     </div>
@@ -92,7 +93,7 @@
 
     <div id="modal-cat" class="modal">
         <div class="modal-content">
-            <span class="close-modal" class="close-generic">&times;</span>
+            <span class="close-modal close-generic">&times;</span>
             <h3 id="cat-modal-title">Nueva Categoría</h3>
             <form id="form-category">
                 <input type="hidden" id="cat-id">
@@ -105,7 +106,7 @@
 
     <div id="modal-ev" class="modal">
         <div class="modal-content">
-            <span class="close-modal" class="close-generic">&times;</span>
+            <span class="close-modal close-generic">&times;</span>
             <h3 id="ev-modal-title">Gestionar Evento</h3>
             <form id="form-event">
                 <div class="form-group"><label>Código</label><input type="text" id="ev-code" required></div>
@@ -138,8 +139,32 @@
             <div id="sale-detail-content"></div>
     
         </div>
+    </div> 
+    <div id="modal-confirm" class="modal">
+        <div class="modal-content" style="max-width:400px; text-align:center;">
+    
+            <h3 id="confirm-title">Confirmación</h3>
+    
+            <p id="confirm-message" style="margin:20px 0;">
+                ¿Está seguro?
+            </p>
+    
+            <div style="display:flex;justify-content:center;gap:15px;">
+    
+                <button id="confirm-cancel" class="btn btn-secondary">
+                    Cancelar
+                </button>
+    
+                <button id="confirm-ok" class="btn btn-primary">
+                    Eliminar
+                </button>
+    
+            </div>
+    
+        </div>
     </div>
-
+    
+    <div id="toast" class="toast"></div>
     <script src="js/data-seed.js"></script>
     <script src="js/storage.js"></script>
     <script src="js/admin.js"></script>
