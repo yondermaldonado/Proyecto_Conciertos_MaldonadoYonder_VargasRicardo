@@ -1,27 +1,63 @@
-// js/main.js
+// js/main.js 
 
 let carrito = StorageManager.get('cart');
 
 document.addEventListener('DOMContentLoaded', () => {
 
     cargarCategoriasFiltro();
+
     renderizarVitrinaEventos();
 
     // Filtros
-    document.getElementById('search-input')?.addEventListener('input', renderizarVitrinaEventos);
-    document.getElementById('filter-ciudad')?.addEventListener('change', renderizarVitrinaEventos);
-    document.getElementById('filter-categoria')?.addEventListener('change', renderizarVitrinaEventos);
+
+    document
+        .getElementById('search-input')
+        ?.addEventListener('input', renderizarVitrinaEventos);
+
+    document
+        .getElementById('filter-ciudad')
+        ?.addEventListener('change', renderizarVitrinaEventos);
+
+    document
+        .getElementById('filter-categoria')
+        ?.addEventListener('change', renderizarVitrinaEventos);
 
     // Modales
-    document.getElementById('ver-carrito')?.addEventListener('click', () => abrirCerrarModal('modal-carrito', true));
-    document.getElementById('close-carrito')?.addEventListener('click', () => abrirCerrarModal('modal-carrito', false));
-    document.getElementById('close-detalle')?.addEventListener('click', () => abrirCerrarModal('modal-detalle', false));
+
+    document
+        .getElementById('ver-carrito')
+        ?.addEventListener('click', () => {
+
+            abrirCerrarModal('modal-carrito', true);
+
+        });
+
+    document
+        .getElementById('close-carrito')
+        ?.addEventListener('click', () => {
+
+            abrirCerrarModal('modal-carrito', false);
+
+        });
+
+    document
+        .getElementById('close-detalle')
+        ?.addEventListener('click', () => {
+
+            abrirCerrarModal('modal-detalle', false);
+
+        });
 
     // Compra
-    document.getElementById('form-compra')?.addEventListener('submit', procesarCompraCliente);
+
+    document
+        .getElementById('form-compra')
+        ?.addEventListener('submit', procesarCompraCliente);
 
     // Restaurar carrito
+
     document.getElementById('cart-count').innerText = carrito.length;
+
     actualizarVistaModalCarrito();
 
 });
@@ -53,21 +89,38 @@ function renderizarVitrinaEventos() {
     if (!contenedor) return;
 
     const eventos = StorageManager.get('events');
+
     const categorias = StorageManager.get('categories');
 
-    const textoBuscado = document.getElementById('search-input').value.toLowerCase();
-    const ciudadSeleccionada = document.getElementById('filter-ciudad').value;
-    const categoriaSeleccionada = document.getElementById('filter-categoria').value;
+    const textoBuscado =
+        document.getElementById('search-input').value.toLowerCase();
 
-    contenedor.innerHTML = '';
+    const ciudadSeleccionada =
+        document.getElementById('filter-ciudad').value;
+
+    const categoriaSeleccionada =
+        document.getElementById('filter-categoria').value;
+
+    contenedor.innerHTML = "";
 
     const eventosFiltrados = eventos.filter(ev => {
 
-        const coincideNombre = ev.name.toLowerCase().includes(textoBuscado);
-        const coincideCiudad = ciudadSeleccionada === "" || ev.city === ciudadSeleccionada;
-        const coincideCategoria = categoriaSeleccionada === "" || ev.category === categoriaSeleccionada;
+        const coincideNombre =
+            ev.name.toLowerCase().includes(textoBuscado);
 
-        return coincideNombre && coincideCiudad && coincideCategoria;
+        const coincideCiudad =
+            ciudadSeleccionada === "" ||
+            ev.city === ciudadSeleccionada;
+
+        const coincideCategoria =
+            categoriaSeleccionada === "" ||
+            ev.category === categoriaSeleccionada;
+
+        return (
+            coincideNombre &&
+            coincideCiudad &&
+            coincideCategoria
+        );
 
     });
 
@@ -75,15 +128,18 @@ function renderizarVitrinaEventos() {
 
         const categoria = categorias.find(c => c.id === ev.category);
 
-        const card = document.createElement('event-card');
+        const card = document.createElement("event-card");
 
-        card.setAttribute('event-id', ev.id);
-        card.setAttribute('name', ev.name);
-        card.setAttribute('price', ev.price);
-        card.setAttribute('date', ev.date);
-        card.setAttribute('city', ev.city);
-        card.setAttribute('image', ev.image);
-        card.setAttribute('category-name', categoria ? categoria.name : 'Evento');
+        card.setAttribute("event-id", ev.id);
+        card.setAttribute("name", ev.name);
+        card.setAttribute("price", ev.price);
+        card.setAttribute("date", ev.date);
+        card.setAttribute("city", ev.city);
+        card.setAttribute("image", ev.image);
+        card.setAttribute(
+            "category-name",
+            categoria ? categoria.name : "Evento"
+        );
 
         contenedor.appendChild(card);
 
@@ -95,29 +151,46 @@ function renderizarVitrinaEventos() {
 
 function enlazarBotonesTarjetas() {
 
-    document.querySelectorAll('.btn-comprar').forEach(btn => {
+    document.querySelectorAll(".btn-comprar").forEach(btn => {
 
-        btn.onclick = e => añadirAlCarrito(e.target.dataset.id);
+        btn.addEventListener("click", (e) => {
+
+            añadirAlCarrito(
+                e.currentTarget.dataset.id
+            );
+
+        });
 
     });
 
-    document.querySelectorAll('.btn-ver').forEach(btn => {
+    document.querySelectorAll(".btn-ver").forEach(btn => {
 
-        btn.onclick = e => verFichaDetalle(e.target.dataset.id);
+        btn.addEventListener("click", (e) => {
+
+            verFichaDetalle(
+                e.currentTarget.dataset.id
+            );
+
+        });
 
     });
 
 }
+/* ==========================================================================
+   CARRITO DE COMPRAS
+   ========================================================================== */
 
-function añadirAlCarrito(id) {
+   function añadirAlCarrito(id) {
 
-    const evento = StorageManager.get('events').find(e => e.id === id);
+    const evento = StorageManager
+        .get("events")
+        .find(e => e.id === id);
 
     carrito.push(evento);
 
-    StorageManager.set('cart', carrito);
+    StorageManager.set("cart", carrito);
 
-    document.getElementById('cart-count').innerText = carrito.length;
+    document.getElementById("cart-count").innerText = carrito.length;
 
     StorageManager.showAlert(`"${evento.name}" añadido al carrito.`);
 
@@ -129,9 +202,9 @@ function eliminarDelCarrito(index) {
 
     carrito.splice(index, 1);
 
-    StorageManager.set('cart', carrito);
+    StorageManager.set("cart", carrito);
 
-    document.getElementById('cart-count').innerText = carrito.length;
+    document.getElementById("cart-count").innerText = carrito.length;
 
     actualizarVistaModalCarrito();
 
@@ -139,7 +212,7 @@ function eliminarDelCarrito(index) {
 
 function actualizarVistaModalCarrito() {
 
-    const contenedorItems = document.getElementById('carrito-items');
+    const contenedorItems = document.getElementById("carrito-items");
 
     if (!contenedorItems) return;
 
@@ -153,11 +226,22 @@ function actualizarVistaModalCarrito() {
 
         contenedorItems.innerHTML += `
 
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;border-bottom:1px dashed #ddd;padding-bottom:6px;">
+            <div
+                style="
+                    display:flex;
+                    justify-content:space-between;
+                    align-items:center;
+                    margin-bottom:8px;
+                    border-bottom:1px dashed #ddd;
+                    padding-bottom:6px;
+                ">
 
                 <div>
+
                     <strong>${item.name}</strong><br>
+
                     <small>${item.city}</small>
+
                 </div>
 
                 <div style="text-align:right;">
@@ -165,9 +249,16 @@ function actualizarVistaModalCarrito() {
                     <strong>$${item.price.toLocaleString()}</strong><br>
 
                     <button
-                        onclick="eliminarDelCarrito(${index})"
-                        style="margin-top:5px;padding:4px 8px;cursor:pointer;">
+                        class="btn-eliminar-carrito"
+                        data-index="${index}"
+                        style="
+                            margin-top:5px;
+                            padding:4px 8px;
+                            cursor:pointer;
+                        ">
+
                         ❌
+
                     </button>
 
                 </div>
@@ -178,47 +269,99 @@ function actualizarVistaModalCarrito() {
 
     });
 
-    document.getElementById('carrito-total').innerText =
+    document.getElementById("carrito-total").innerText =
         `$${total.toLocaleString()} COP`;
 
+    document
+        .querySelectorAll(".btn-eliminar-carrito")
+        .forEach(btn => {
+
+            btn.addEventListener("click", (e) => {
+
+                eliminarDelCarrito(
+
+                    Number(e.currentTarget.dataset.index)
+
+                );
+
+            });
+
+        });
+
 }
+/* ==========================================================================
+   DETALLE DEL EVENTO
+   ========================================================================== */
 
-function verFichaDetalle(id) {
+   function verFichaDetalle(id) {
 
-    const ev = StorageManager.get('events').find(e => e.id === id);
+    const ev = StorageManager
+        .get("events")
+        .find(e => e.id === id);
 
-    const contenido = document.getElementById('detalle-content');
+    const contenido = document.getElementById("detalle-content");
 
     if (!contenido) return;
 
     contenido.innerHTML = `
 
-        <img src="${ev.image}"
-             style="width:100%;max-height:280px;object-fit:cover;border-radius:8px;">
+        <img
+            src="${ev.image}"
+            style="
+                width:100%;
+                max-height:280px;
+                object-fit:cover;
+                border-radius:8px;
+            ">
 
-        <h2 style="margin:12px 0;color:var(--secondary-color);">
+        <h2
+            style="
+                margin:12px 0;
+                color:var(--secondary-color);
+            ">
             ${ev.name}
         </h2>
 
-        <p style="color:#555;line-height:1.5;">
+        <p
+            style="
+                color:#555;
+                line-height:1.5;
+            ">
             ${ev.description}
         </p>
 
-        <p><strong>📍 Ciudad:</strong> ${ev.city}</p>
+        <p>
+            <strong>📍 Ciudad:</strong>
+            ${ev.city}
+        </p>
 
-        <p><strong>📅 Fecha:</strong> ${ev.date}</p>
+        <p>
+            <strong>📅 Fecha:</strong>
+            ${ev.date}
+        </p>
 
-        <p><strong>🕒 Hora:</strong> ${ev.time}</p>
+        <p>
+            <strong>🕒 Hora:</strong>
+            ${ev.time}
+        </p>
 
-        <h3 style="color:var(--primary-color);margin-top:15px;">
+        <h3
+            style="
+                color:var(--primary-color);
+                margin-top:15px;
+            ">
             $${ev.price.toLocaleString()} COP
         </h3>
 
     `;
 
-    abrirCerrarModal('modal-detalle', true);
+    abrirCerrarModal("modal-detalle", true);
 
 }
+
+/* ==========================================================================
+   PROCESAR COMPRA
+   ========================================================================== */
 
 function procesarCompraCliente(e) {
 
@@ -226,13 +369,22 @@ function procesarCompraCliente(e) {
 
     if (carrito.length === 0) {
 
-        StorageManager.showAlert("El carrito está vacío.", "error");
+        StorageManager.showAlert(
+            "El carrito está vacío.",
+            "error"
+        );
 
         return;
 
     }
 
-    const total = carrito.reduce((suma, item) => suma + item.price, 0);
+    const total = carrito.reduce(
+
+        (suma, item) => suma + item.price,
+
+        0
+
+    );
 
     const venta = {
 
@@ -246,15 +398,20 @@ function procesarCompraCliente(e) {
 
         cliente: {
 
-            identificacion: document.getElementById('cli-id').value,
+            identificacion:
+                document.getElementById("cli-id").value,
 
-            nombre: document.getElementById('cli-nombre').value,
+            nombre:
+                document.getElementById("cli-nombre").value,
 
-            direccion: document.getElementById('cli-direccion').value,
+            direccion:
+                document.getElementById("cli-direccion").value,
 
-            telefono: document.getElementById('cli-telefono').value,
+            telefono:
+                document.getElementById("cli-telefono").value,
 
-            email: document.getElementById('cli-email').value
+            email:
+                document.getElementById("cli-email").value
 
         },
 
@@ -268,7 +425,9 @@ function procesarCompraCliente(e) {
 
     StorageManager.registrarNuevaVenta(venta);
 
-    StorageManager.showAlert("¡Compra realizada con éxito!");
+    StorageManager.showAlert(
+        "¡Compra realizada con éxito!"
+    );
 
     if (typeof actualizarTablaVentasAdmin === "function") {
 
@@ -286,12 +445,21 @@ function procesarCompraCliente(e) {
 
     document.getElementById("form-compra").reset();
 
-    abrirCerrarModal("modal-carrito", false);
+    abrirCerrarModal(
+        "modal-carrito",
+        false
+    );
 
 }
 
+/* ==========================================================================
+   MODALES
+   ========================================================================== */
+
 function abrirCerrarModal(id, visible) {
 
-    document.getElementById(id)?.classList.toggle('active', visible);
+    document
+        .getElementById(id)
+        ?.classList.toggle("active", visible);
 
 }

@@ -26,7 +26,7 @@ const initialEvents = [
         date: "2026-10-22",
         time: "14:00",
         city: "Bucaramanga",
-        image: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=500",
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbhUgaeOT0vZpNDWkZ7hUXxGHExtuFdePUvMb_wPN9RQ&s=10",
         description: "Apoya a tu equipo local en las canchas profesionales de la región."
     },
     {
@@ -37,7 +37,7 @@ const initialEvents = [
         date: "2026-11-05",
         time: "17:00",
         city: "Bogotá",
-        image: "https://images.unsplash.com/photo-1518173946687-a4c8a3b1f98e?q=80&w=500",
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbLYigZX5usi6zP1Evf1tIwXzKQ487Btg4vwkGN0tWeOZABpkxk1734Jyk&s=10",
         description: "Sorteo de una Laptop Gamer de última generación con kit completo de accesorios."
     }
 ];
