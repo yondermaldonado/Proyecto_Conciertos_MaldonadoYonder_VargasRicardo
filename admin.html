@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,14 +8,17 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/responsive.css">
 </head>
+
 <body>
 
     <div id="login-block" class="modal active" style="background:#1a1a2e;">
         <div class="modal-content">
             <h3 style="text-align:center; margin-bottom:20px;">Acceso Administrativo</h3>
             <form id="form-login">
-                <div class="form-group"><label>Email</label><input type="email" id="log-email" required value="admin@mail.com"></div>
-                <div class="form-group"><label>Contraseña</label><input type="password" id="log-pass" required value="123456"></div>
+                <div class="form-group"><label>Email</label><input type="email" id="log-email" required
+                        value="admin@mail.com"></div>
+                <div class="form-group"><label>Contraseña</label><input type="password" id="log-pass" required
+                        value="123456"></div>
                 <button type="submit" class="btn btn-primary" style="width:100%;">Ingresar</button>
             </form>
         </div>
@@ -38,7 +42,13 @@
                     <button class="btn btn-primary" id="btn-add-cat">Agregar Categoría</button>
                 </div>
                 <table id="table-categories">
-                    <thead><tr><th>Nombre</th><th>Descripción</th><th>Acciones</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
                     <tbody></tbody>
                 </table>
             </section>
@@ -49,7 +59,15 @@
                     <button class="btn btn-primary" id="btn-add-ev">Agregar Evento</button>
                 </div>
                 <table id="table-events">
-                    <thead><tr><th>Código</th><th>Nombre</th><th>Ciudad</th><th>Precio</th><th>Acciones</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Nombre</th>
+                            <th>Ciudad</th>
+                            <th>Precio</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
                     <tbody></tbody>
                 </table>
             </section>
@@ -57,7 +75,15 @@
             <section id="mod-ventas" class="admin-section" style="display:none;">
                 <h2>Historial de Ventas</h2>
                 <table id="table-sales">
-                    <thead><tr><th>Fecha</th><th>Cliente</th><th>Ciudad</th><th>Total</th><th>Detalles</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Cliente</th>
+                            <th>Ciudad</th>
+                            <th>Total</th>
+                            <th>Detalles</th>
+                        </tr>
+                    </thead>
                     <tbody></tbody>
                 </table>
             </section>
@@ -102,9 +128,21 @@
             </form>
         </div>
     </div>
+    <div id="modal-sale" class="modal">
+        <div class="modal-content" style="max-width:700px;">
+    
+            <span id="close-sale" class="close-modal">&times;</span>
+    
+            <h3>Detalle de la Venta</h3>
+    
+            <div id="sale-detail-content"></div>
+    
+        </div>
+    </div>
 
     <script src="js/data-seed.js"></script>
     <script src="js/storage.js"></script>
     <script src="js/admin.js"></script>
 </body>
+
 </html>

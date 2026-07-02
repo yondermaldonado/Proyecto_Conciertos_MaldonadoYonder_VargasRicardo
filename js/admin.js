@@ -21,9 +21,15 @@ function inicializarMódulosDashboard() {
     actualizarTablaVentasAdmin();
     cargarDesplegableCategorias();
 
+    document.getElementById("close-sale").onclick = () => {
+
+        document.getElementById("modal-sale").classList.remove("active");
+
+    };
+
     document.getElementById('btn-add-cat').onclick = () => abrirModalCategoria();
     document.getElementById('btn-add-ev').onclick = () => abrirModalEvento();
-    
+
     document.getElementById('form-category').onsubmit = guardarCategoria;
     document.getElementById('form-event').onsubmit = guardarEvento;
 
@@ -43,7 +49,7 @@ function configurarNavegacionTabs() {
         pes.onclick = (e) => {
             pestañas.forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.admin-section').forEach(s => s.style.display = 'none');
-            
+
             e.target.classList.add('active');
             const targetID = e.target.getAttribute('data-target');
             document.getElementById(targetID).style.display = 'block';
@@ -63,7 +69,7 @@ function renderizarTablaCategorias() {
     const tbody = document.querySelector('#table-categories tbody');
     if (!tbody) return;
     tbody.innerHTML = '';
-    
+
     cats.forEach(c => {
         tbody.innerHTML += `
             <tr>
@@ -101,11 +107,11 @@ function guardarCategoria(e) {
     let lista = StorageManager.get('categories');
 
     if (id) {
-        lista = lista.map(c => c.id === id ? {id, name, description} : c);
+        lista = lista.map(c => c.id === id ? { id, name, description } : c);
     } else {
         lista.push({ id: 'cat-' + Date.now(), name, description });
     }
-    
+
     StorageManager.set('categories', lista);
     document.getElementById('modal-cat').classList.remove('active');
     renderizarTablaCategorias();
@@ -129,7 +135,7 @@ function renderizarTablaEventos() {
     const tbody = document.querySelector('#table-events tbody');
     if (!tbody) return;
     tbody.innerHTML = '';
-    
+
     evs.forEach(e => {
         tbody.innerHTML += `
             <tr>
@@ -158,13 +164,13 @@ function cargarDesplegableCategorias() {
 function abrirModalEvento(id = null) {
     document.getElementById('modal-ev').classList.add('active');
     const inputCodigo = document.getElementById('ev-code');
-    
+
     if (id) {
         const ev = StorageManager.get('events').find(e => e.id === id);
         document.getElementById('ev-modal-title').innerText = "Modificar Evento";
-        inputCodigo.value = ev.id; 
+        inputCodigo.value = ev.id;
         inputCodigo.disabled = true;
-        
+
         document.getElementById('ev-name').value = ev.name;
         document.getElementById('ev-cat').value = ev.category;
         document.getElementById('ev-price').value = ev.price;
@@ -184,7 +190,7 @@ function guardarEvento(e) {
     e.preventDefault();
     const id = document.getElementById('ev-code').value;
     let listaEventos = StorageManager.get('events');
-    
+
     const datosDelEvento = {
         id,
         name: document.getElementById('ev-name').value,
@@ -218,49 +224,136 @@ function eliminarEvento(id) {
 }
 
 /* ==========================================================================
-   CARGA AUTOMÁTICA DESDE VENTAS.JSON FÍSICO
+   TABLA DE VENTAS (LOCALSTORAGE)
    ========================================================================== */
 function actualizarTablaVentasAdmin() {
+
     const tbody = document.querySelector('#table-sales tbody');
+
     if (!tbody) return;
-    
-    tbody.innerHTML = '';
 
-    // 1. Petición automática al archivo ventas.json al lado de tu index.html
-    fetch('ventas.json')
-        .then(response => response.json())
-        .then(ventasDelJson => {
-            // 2. Traer las ventas de clientes hechas en la sesión de uso actual
-            const ventasNuevas = StorageManager.get('sales');
-            
-            // Unir la base fija con la temporal
-            const todasLasVentas = [...ventasDelJson, ...ventasNuevas];
+    tbody.innerHTML = "";
 
-            if (todasLasVentas.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">No hay ventas en el registro.</td></tr>';
-                return;
-            }
+    const ventas = StorageManager.get("sales");
 
-            // Organizar cronológicamente de manera descendente
-            todasLasVentas.sort((a, b) => b.timestamp - a.timestamp);
+    if (ventas.length === 0) {
 
-            // Poblar las filas automáticamente
-            todasLasVentas.forEach(v => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${v.fecha}</td>
-                        <td>${v.cliente.nombre}</td>
-                        <td>${v.ciudad}</td>
-                        <td><strong>$${v.total.toLocaleString()} COP</strong></td>
-                    </tr>
-                `;
-            });
-        })
-        .catch(error => {
-            console.log("Archivo ventas.json vacío o ausente. Mostrando compras locales en vivo.");
-            const ventasNuevas = StorageManager.get('sales');
-            ventasNuevas.forEach(v => {
-                tbody.innerHTML += `<tr><td>${v.fecha}</td><td>${v.cliente.nombre}</td><td>${v.ciudad}</td><td><strong>$${v.total.toLocaleString()} COP</strong></td></tr>`;
-            });
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="5" style="text-align:center;">
+                    No existen ventas registradas.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    ventas
+        .sort((a, b) => b.timestamp - a.timestamp)
+        .forEach((venta, index) => {
+
+            tbody.innerHTML += `
+                <tr>
+
+                    <td>${venta.fecha}</td>
+
+                    <td>${venta.cliente.nombre}</td>
+
+                    <td>${venta.ciudad}</td>
+
+                    <td>$${venta.total.toLocaleString()}</td>
+
+                    <td>
+
+                        <button
+                            class="btn btn-secondary"
+                            onclick="verDetalleVenta(${index})">
+
+                            Ver
+
+                        </button>
+
+                    </td>
+
+                </tr>
+            `;
+
         });
+
+}
+function verDetalleVenta(index) {
+
+    const ventas = StorageManager.get("sales");
+
+    const venta = ventas
+        .sort((a, b) => b.timestamp - a.timestamp)[index];
+
+    if (!venta) return;
+
+    let html = `
+        <h3>Información del Cliente</h3>
+
+        <p><strong>Nombre:</strong> ${venta.cliente.nombre}</p>
+
+        <p><strong>Identificación:</strong> ${venta.cliente.identificacion}</p>
+
+        <p><strong>Teléfono:</strong> ${venta.cliente.telefono}</p>
+
+        <p><strong>Correo:</strong> ${venta.cliente.email}</p>
+
+        <p><strong>Dirección:</strong> ${venta.cliente.direccion}</p>
+
+        <hr>
+
+        <h3>Información de la Compra</h3>
+
+        <p><strong>Fecha:</strong> ${venta.fecha}</p>
+
+        <p><strong>Ciudad:</strong> ${venta.ciudad}</p>
+
+        <p><strong>Cantidad de tickets:</strong> ${venta.cantidad}</p>
+
+        <hr>
+
+        <h3>Eventos Comprados</h3>
+
+        <table style="width:100%; border-collapse:collapse;">
+            <thead>
+                <tr>
+                    <th>Evento</th>
+                    <th>Ciudad</th>
+                    <th>Precio</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    venta.tickets.forEach(ticket => {
+
+        html += `
+            <tr>
+                <td>${ticket.name}</td>
+                <td>${ticket.city}</td>
+                <td>$${ticket.price.toLocaleString()}</td>
+            </tr>
+        `;
+
+    });
+
+    html += `
+            </tbody>
+        </table>
+
+        <hr>
+
+        <h2 style="text-align:right;color:green;">
+            Total: $${venta.total.toLocaleString()} COP
+        </h2>
+    `;
+
+    document.getElementById("sale-detail-content").innerHTML = html;
+
+    document.getElementById("modal-sale").classList.add("active");
+
 }
