@@ -12,16 +12,16 @@ El sistema permite a los usuarios visualizar eventos disponibles, filtrarlos por
 
 ### modulo cliente
 
-Visualización de eventos disponibles.
-Búsqueda por nombre del evento.
-Filtro por ciudad.
-Filtro por categoría.
-Visualización de detalles de cada evento.
-Carrito de compras.
-Eliminación de productos del carrito.
-Registro de datos del comprador.
-Generación de ventas.
-Persistencia de la información mediante LocalStorage.
+- Visualización de eventos disponibles.
+- Búsqueda por nombre del evento.
+- Filtro por ciudad.
+- Filtro por categoría.
+- Visualización de detalles de cada evento.
+- Carrito de compras.
+- Eliminación de productos del carrito.
+- Registro de datos del comprador.
+- Generación de ventas.
+- Persistencia de la información mediante LocalStorage.
 
 ### modulo administrador
 
@@ -39,38 +39,38 @@ Contraseña:
 
 El administrador puede:
 
-Gestionar categorías (CRUD).
-Gestionar eventos (CRUD).
-Consultar el historial de ventas.
-Visualizar el detalle completo de cada compra.
-Cerrar sesión.
+- Gestionar categorías (CRUD).
+- Gestionar eventos (CRUD).
+- Consultar el historial de ventas.
+- Visualizar el detalle completo de cada compra.
+- Cerrar sesión.
 
 ## tecnologias utilizadas
 
-HTML5
-CSS3
-JavaScript
-LocalStorage
-Web Components
+- HTML
+- CSS
+- JavaScript
+- LocalStorage
+- Web Components
 
 ## persistencia de datos
 
 Toda la información es almacenada utilizando LocalStorage, incluyendo:
 
-Categorías.
-Eventos.
-Carrito de compras.
-Historial de ventas.
+- Categorías.
+- Eventos.
+- Carrito de compras.
+- Historial de ventas.
 
 Al cerrar o actualizar el navegador, la información permanece almacenada.
 
 ## instrucciones de visualizacion 
 
-Descargar o clonar el repositorio.
-git clone [URL_DEL_REPOSITORIO](https://github.com/yondermaldonado/Proyecto_Conciertos_MaldonadoYonder_VargasRicardo)
-Abrir la carpeta del proyecto.
-Ejecutar el archivo:
-index.html
+- Descargar o clonar el repositorio.
+- git clone [URL_DEL_REPOSITORIO](https://github.com/yondermaldonado/Proyecto_Conciertos_MaldonadoYonder_VargasRicardo)
+- Abrir la carpeta del proyecto.
+- Ejecutar el archivo:
+- index.html
 
 o utilizar una extensión como Live Server en Visual Studio Code.
 
