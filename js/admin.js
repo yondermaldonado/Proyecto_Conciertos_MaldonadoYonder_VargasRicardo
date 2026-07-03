@@ -1,4 +1,5 @@
 // js/admin.js
+
 document.getElementById('form-login')?.addEventListener('submit', (e) => {
 
     e.preventDefault();
@@ -10,8 +11,10 @@ document.getElementById('form-login')?.addEventListener('submit', (e) => {
 
         document.getElementById('login-block').classList.remove('active');
         document.getElementById('admin-dashboard').style.display = "block";
-
+        mostrarDashboard();
+        actualizarDashboard();
         inicializarMódulosDashboard();
+        activarDashboardCards();
 
     } else {
 
@@ -243,6 +246,7 @@ function guardarCategoria(e) {
     cargarDesplegableCategorias();
 
     StorageManager.showAlert("Categoría guardada con éxito.");
+    actualizarDashboard();
 
 }
 
@@ -265,10 +269,11 @@ function eliminarCategoria(id) {
             cargarDesplegableCategorias();
 
             StorageManager.showAlert("Categoría eliminada.");
-
+            actualizarDashboard();
         }
 
     );
+
 
 }
 /* ==========================================================================
@@ -456,7 +461,8 @@ function guardarEvento(e) {
     renderizarTablaEventos();
 
     StorageManager.showAlert("Evento registrado en la cartelera.");
-
+    actualizarDashboard();
+    
 }
 
 function eliminarEvento(id) {
@@ -476,7 +482,7 @@ function eliminarEvento(id) {
             renderizarTablaEventos();
 
             StorageManager.showAlert("Evento eliminado.");
-
+            actualizarDashboard();
         }
 
     );
@@ -676,6 +682,74 @@ function mostrarConfirmacion(mensaje, accionAceptar) {
         document.getElementById("modal-confirm").classList.remove("active");
 
         accionAceptar();
+
+    });
+
+}
+function mostrarDashboard(){
+
+    document.querySelectorAll(".admin-section").forEach(sec=>{
+
+        sec.style.display="none";
+
+    });
+
+    document.getElementById("mod-dashboard").style.display="block";
+
+    document.querySelectorAll("#admin-nav a[data-target]").forEach(a=>{
+
+        a.classList.remove("active");
+
+    });
+
+    document.querySelector('[data-target="mod-dashboard"]').classList.add("active");
+
+}
+function actualizarDashboard(){
+
+    document.querySelector("#dash-cat h1").textContent =
+        StorageManager.get("categories").length;
+
+    document.querySelector("#dash-event h1").textContent =
+        StorageManager.get("events").length;
+
+    document.querySelector("#dash-sales h1").textContent =
+        StorageManager.get("sales").length;
+
+}
+function activarDashboardCards(){
+
+    document.querySelectorAll("dashboard-card").forEach(card=>{
+
+        card.addEventListener("click",()=>{
+
+            const destino = card.dataset.target;
+
+            document.querySelectorAll(".admin-section").forEach(sec=>{
+
+                sec.style.display="none";
+
+            });
+
+            document.getElementById(destino).style.display="block";
+
+            document.querySelectorAll("#admin-nav a[data-target]").forEach(a=>{
+
+                a.classList.remove("active");
+
+            });
+
+            document
+                .querySelector(`[data-target="${destino}"]`)
+                .classList.add("active");
+
+            if(destino==="mod-ventas"){
+
+                actualizarTablaVentasAdmin();
+
+            }
+
+        });
 
     });
 

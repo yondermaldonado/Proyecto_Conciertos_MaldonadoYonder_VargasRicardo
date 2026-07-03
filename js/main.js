@@ -180,7 +180,7 @@ function enlazarBotonesTarjetas() {
    CARRITO DE COMPRAS
    ========================================================================== */
 
-   function añadirAlCarrito(id) {
+function añadirAlCarrito(id) {
 
     const evento = StorageManager
         .get("events")
@@ -293,7 +293,7 @@ function actualizarVistaModalCarrito() {
    DETALLE DEL EVENTO
    ========================================================================== */
 
-   function verFichaDetalle(id) {
+function verFichaDetalle(id) {
 
     const ev = StorageManager
         .get("events")
@@ -432,6 +432,12 @@ function procesarCompraCliente(e) {
     if (typeof actualizarTablaVentasAdmin === "function") {
 
         actualizarTablaVentasAdmin();
+
+    }
+
+    if (typeof actualizarDashboard === "function") {
+
+        actualizarDashboard();
 
     }
 

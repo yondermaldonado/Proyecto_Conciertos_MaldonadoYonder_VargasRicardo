@@ -31,5 +31,30 @@ class EventCard extends HTMLElement {
         `;
     }
 }
+customElements.define("event-card", EventCard);
 
-customElements.define('event-card', EventCard);
+class DashboardCard extends HTMLElement {
+
+    connectedCallback() {
+
+        this.innerHTML = `
+            <div class="dashboard-card">
+
+                <div class="dashboard-icon">
+                    ${this.getAttribute("icono")}
+                </div>
+
+                <h3>${this.getAttribute("titulo")}</h3>
+
+                <h1>0</h1>
+
+                <p>Ver detalles</p>
+
+            </div>
+        `;
+
+    }
+
+}
+
+customElements.define("dashboard-card", DashboardCard);

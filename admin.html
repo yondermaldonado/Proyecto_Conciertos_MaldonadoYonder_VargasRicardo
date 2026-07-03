@@ -20,7 +20,8 @@
                 <div class="form-group"><label>Contraseña</label><input type="password" id="log-pass" required
                         value="123456"></div>
                 <button type="submit" class="btn btn-primary" style="width:100%;">Ingresar</button>
-                <button type="button" class="btn btn-secondary" onclick="location.href='index.html'" style="width:100%; margin-top:10px;">Volver</button>
+                <button type="button" class="btn btn-secondary" onclick="location.href='index.html'"
+                    style="width:100%; margin-top:10px;">Volver</button>
             </form>
         </div>
     </div>
@@ -29,7 +30,8 @@
         <header>
             <div class="logo">Panel<span>Admin</span></div>
             <nav id="admin-nav">
-                <a data-target="mod-categorias" class="active">Categorías</a>
+                <a data-target="mod-dashboard" class="active">Dashboard</a>
+                <a data-target="mod-categorias">Categorías</a>
                 <a data-target="mod-eventos">Eventos</a>
                 <a data-target="mod-ventas">Ventas</a>
                 <a id="btn-logout" style="color:var(--primary-color)">Salir</a>
@@ -37,6 +39,24 @@
         </header>
 
         <main class="container">
+            <section id="mod-dashboard" class="admin-section">
+
+                <h2>Resumen General</h2>
+
+                <div class="dashboard-cards">
+
+                    <dashboard-card id="dash-cat" data-target="mod-categorias" icono="📂" titulo="Categorías">
+                    </dashboard-card>
+
+                    <dashboard-card id="dash-event" data-target="mod-eventos" icono="🎫" titulo="Eventos">
+                    </dashboard-card>
+
+                    <dashboard-card id="dash-sales" data-target="mod-ventas" icono="💰" titulo="Ventas">
+                    </dashboard-card>
+
+                </div>
+
+            </section>
             <section id="mod-categorias" class="admin-section">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <h2>Módulo Categorías</h2>
@@ -112,7 +132,8 @@
                 <div class="form-group"><label>Código</label><input type="text" id="ev-code" required></div>
                 <div class="form-group"><label>Nombre</label><input type="text" id="ev-name" required></div>
                 <div class="form-group"><label>Categoría</label><select id="ev-cat" required></select></div>
-                <div class="form-group"><label>Precio (COP)</label><input type="number" id="ev-price" required></div>
+                <div class="form-group"><label>Precio (COP)</label><input type="number" id="ev-price" min="1" required>
+                </div>
                 <div class="form-group"><label>Fecha</label><input type="date" id="ev-date" required></div>
                 <div class="form-group"><label>Hora</label><input type="time" id="ev-time" required></div>
                 <div class="form-group"><label>Ciudad</label>
@@ -131,42 +152,43 @@
     </div>
     <div id="modal-sale" class="modal">
         <div class="modal-content" style="max-width:700px;">
-    
+
             <span id="close-sale" class="close-modal">&times;</span>
-    
+
             <h3>Detalle de la Venta</h3>
-    
+
             <div id="sale-detail-content"></div>
-    
+
         </div>
-    </div> 
+    </div>
     <div id="modal-confirm" class="modal">
         <div class="modal-content" style="max-width:400px; text-align:center;">
-    
+
             <h3 id="confirm-title">Confirmación</h3>
-    
+
             <p id="confirm-message" style="margin:20px 0;">
                 ¿Está seguro?
             </p>
-    
+
             <div style="display:flex;justify-content:center;gap:15px;">
-    
+
                 <button id="confirm-cancel" class="btn btn-secondary">
                     Cancelar
                 </button>
-    
+
                 <button id="confirm-ok" class="btn btn-primary">
                     Eliminar
                 </button>
-    
+
             </div>
-    
+
         </div>
     </div>
-    
+
     <div id="toast" class="toast"></div>
     <script src="js/data-seed.js"></script>
     <script src="js/storage.js"></script>
+    <script src="js/components.js"></script>
     <script src="js/admin.js"></script>
 </body>
 
