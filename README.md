@@ -78,11 +78,11 @@ o utilizar una extensión como Live Server en Visual Studio Code.
 
 ### vista del cliente
 
-[visual_cliente](/img/cliente.png)
-[visual_carrito](/img/carrito.png)
+![visual_cliente](/img/cliente.png)
+![visual_carrito](/img/carrito.png)
 
 ### vista del administrador
-[visual_login](/img/login.png)
-[visual_CRUD_categorias](/img/categorias.png)
-[visual_CRUD_eventos](/img/eventos.png)
-[visual_ventas](/img/ventas.png)
+![visual_login](/img/login.png)
+![visual_CRUD_categorias](/img/categorias.png)
+![visual_CRUD_eventos](/img/eventos.png)
+![visual_ventas](/img/ventas.png)
