@@ -38,19 +38,19 @@ class DashboardCard extends HTMLElement {
     connectedCallback() {
 
         this.innerHTML = `
-            <div class="dashboard-card">
+        <div class="dashboard-card">
 
-                <div class="dashboard-icon">
-                    ${this.getAttribute("icono")}
-                </div>
-
-                <h3>${this.getAttribute("titulo")}</h3>
-
-                <h1>0</h1>
-
-                <p>Ver detalles</p>
-
+            <div class="dashboard-icon">
+                ${this.getAttribute("icono")}
             </div>
+
+            <h3>${this.getAttribute("titulo")}</h3>
+
+            <h1>0</h1>
+
+            <p>${this.getAttribute("descripcion") || "Ver detalles"}</p>
+
+        </div>
         `;
 
     }

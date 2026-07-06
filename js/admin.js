@@ -280,7 +280,7 @@ function eliminarCategoria(id) {
    CRUD: EVENTOS
    ========================================================================== */
 
-   function renderizarTablaEventos() {
+function renderizarTablaEventos() {
 
     const eventos = StorageManager.get("events");
 
@@ -464,7 +464,7 @@ function guardarEvento(e) {
 
     StorageManager.showAlert("Evento registrado en la cartelera.");
     actualizarDashboard();
-    
+
 }
 
 function eliminarEvento(id) {
@@ -494,7 +494,7 @@ function eliminarEvento(id) {
    TABLA DE VENTAS (LOCALSTORAGE)
    ========================================================================== */
 
-   function actualizarTablaVentasAdmin() {
+function actualizarTablaVentasAdmin() {
 
     const tbody = document.querySelector("#table-sales tbody");
 
@@ -688,17 +688,17 @@ function mostrarConfirmacion(mensaje, accionAceptar) {
     });
 
 }
-function mostrarDashboard(){
+function mostrarDashboard() {
 
-    document.querySelectorAll(".admin-section").forEach(sec=>{
+    document.querySelectorAll(".admin-section").forEach(sec => {
 
-        sec.style.display="none";
+        sec.style.display = "none";
 
     });
 
-    document.getElementById("mod-dashboard").style.display="block";
+    document.getElementById("mod-dashboard").style.display = "block";
 
-    document.querySelectorAll("#admin-nav a[data-target]").forEach(a=>{
+    document.querySelectorAll("#admin-nav a[data-target]").forEach(a => {
 
         a.classList.remove("active");
 
@@ -707,7 +707,7 @@ function mostrarDashboard(){
     document.querySelector('[data-target="mod-dashboard"]').classList.add("active");
 
 }
-function actualizarDashboard(){
+function actualizarDashboard() {
 
     document.querySelector("#dash-cat h1").textContent =
         StorageManager.get("categories").length;
@@ -715,27 +715,35 @@ function actualizarDashboard(){
     document.querySelector("#dash-event h1").textContent =
         StorageManager.get("events").length;
 
+    const ventas = StorageManager.get("sales");
+
+    const totalGanado = ventas.reduce((total, venta) => {
+
+        return total + venta.total;
+
+    }, 0);
+
     document.querySelector("#dash-sales h1").textContent =
-        StorageManager.get("sales").length;
+        "$" + totalGanado.toLocaleString();
 
 }
-function activarDashboardCards(){
+function activarDashboardCards() {
 
-    document.querySelectorAll("dashboard-card").forEach(card=>{
+    document.querySelectorAll("dashboard-card").forEach(card => {
 
-        card.addEventListener("click",()=>{
+        card.addEventListener("click", () => {
 
             const destino = card.dataset.target;
 
-            document.querySelectorAll(".admin-section").forEach(sec=>{
+            document.querySelectorAll(".admin-section").forEach(sec => {
 
-                sec.style.display="none";
+                sec.style.display = "none";
 
             });
 
-            document.getElementById(destino).style.display="block";
+            document.getElementById(destino).style.display = "block";
 
-            document.querySelectorAll("#admin-nav a[data-target]").forEach(a=>{
+            document.querySelectorAll("#admin-nav a[data-target]").forEach(a => {
 
                 a.classList.remove("active");
 
@@ -745,7 +753,7 @@ function activarDashboardCards(){
                 .querySelector(`[data-target="${destino}"]`)
                 .classList.add("active");
 
-            if(destino==="mod-ventas"){
+            if (destino === "mod-ventas") {
 
                 actualizarTablaVentasAdmin();
 
