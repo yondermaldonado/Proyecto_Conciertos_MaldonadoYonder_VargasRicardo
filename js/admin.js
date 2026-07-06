@@ -373,6 +373,8 @@ function abrirModalEvento(id = null) {
     document.getElementById("modal-ev").classList.add("active");
 
     const inputCodigo = document.getElementById("ev-code");
+    const inputFecha = document.getElementById("ev-date");
+    inputFecha.min = new Date().toISOString().split("T")[0];
 
     if (id) {
 
