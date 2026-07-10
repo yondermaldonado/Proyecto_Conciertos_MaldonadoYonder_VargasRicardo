@@ -32,7 +32,7 @@ const StorageManager = {
         if (!localStorage.getItem('sales')) {
             localStorage.setItem(
                 'sales',
-                JSON.stringify([])
+                JSON.stringify(ventasIniciales)
             );
         }
 
